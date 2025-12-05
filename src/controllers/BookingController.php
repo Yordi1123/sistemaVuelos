@@ -9,6 +9,7 @@ class BookingController {
     private $flightModel;
     private $seatModel;
     private $passengerModel;
+    private $db;
     
     public function __construct() {
         $this->bookingModel = new Booking();
@@ -324,6 +325,10 @@ class BookingController {
             
             // Obtener reserva completa
             $booking = $this->bookingModel->getById($reserva_id);
+            
+            if (DEBUG_MODE) {
+                error_log("Booking obtenido: " . print_r($booking, true));
+            }
             
             if (!$booking) {
                 set_flash('error', 'Reserva creada pero error al obtener detalles');

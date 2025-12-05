@@ -1,7 +1,22 @@
 <?php
+// Evitar caché del navegador
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 $page_title = 'Reserva Confirmada - ' . APP_NAME;
 require VIEWS_PATH . '/layouts/header.php';
 ?>
+
+<!-- SIEMPRE MOSTRAR DEBUG -->
+<div style="background: #fff3cd; border: 2px solid #856404; padding: 20px; margin: 20px; border-radius: 8px;">
+    <h3 style="color: #856404; margin-top: 0;">🔍 DEBUG - Datos del Booking:</h3>
+    <pre style="background: white; padding: 15px; border-radius: 4px; overflow-x: auto; max-height: 400px;"><?php print_r($booking); ?></pre>
+    <p><strong>codigo_reserva existe:</strong> <?= isset($booking['codigo_reserva']) ? 'SÍ' : 'NO' ?></p>
+    <p><strong>Valor de codigo_reserva:</strong> <?= isset($booking['codigo_reserva']) ? $booking['codigo_reserva'] : 'NO EXISTE' ?></p>
+    <p><strong>id_reserva:</strong> <?= $booking['id_reserva'] ?? 'NO EXISTE' ?></p>
+    <p><strong>URL que se generará:</strong> <?= url('/payment/checkout?booking=' . (isset($booking['codigo_reserva']) ? $booking['codigo_reserva'] : $booking['id_reserva'])) ?></p>
+</div>
 
 <div class="booking-container">
     <div class="confirmation-success">
@@ -14,7 +29,7 @@ require VIEWS_PATH . '/layouts/header.php';
         
         <div class="reservation-code">
             <div class="code-label">Código de Reserva</div>
-            <div class="code-value"><?= $booking['codigo_reserva'] ?></div>
+            <div class="code-value"><?= isset($booking['codigo_reserva']) ? $booking['codigo_reserva'] : 'ERROR: ' . $booking['id_reserva'] ?></div>
         </div>
         
         <div class="confirmation-details">

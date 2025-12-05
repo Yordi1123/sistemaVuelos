@@ -11,12 +11,22 @@ require VIEWS_PATH . '/layouts/header.php';
     <h1>¡Pago Procesado Exitosamente!</h1>
     <p>Su reserva ha sido confirmada y sus boletos han sido generados</p>
     
+    <?php if (isset($booking) && $booking): ?>
     <div class="transaction-info">
         <div class="info-item">
-            <strong>Código de Transacción:</strong>
-            <span><?= escape_html($transaction_code) ?></span>
+            <strong>Código de Reserva:</strong>
+            <span><?= escape_html($booking['codigo_reserva']) ?></span>
+        </div>
+        <div class="info-item">
+            <strong>Estado:</strong>
+            <span class="badge badge-success">Confirmada</span>
+        </div>
+        <div class="info-item">
+            <strong>Monto Total:</strong>
+            <span><?= format_price($booking['monto_total']) ?></span>
         </div>
     </div>
+    <?php endif; ?>
     
     <div class="success-actions">
         <a href="<?= url('/profile/dashboard') ?>" class="btn btn-primary btn-large">

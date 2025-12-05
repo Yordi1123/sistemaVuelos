@@ -107,8 +107,18 @@ class Booking {
             
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':id' => $id]);
-            return $stmt->fetch();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (DEBUG_MODE) {
+                error_log("getById($id) SQL: " . $sql);
+                error_log("getById($id) Result: " . print_r($result, true));
+            }
+            
+            return $result;
         } catch (PDOException $e) {
+            if (DEBUG_MODE) {
+                error_log("Error en getById: " . $e->getMessage());
+            }
             return false;
         }
     }
