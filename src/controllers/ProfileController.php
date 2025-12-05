@@ -19,6 +19,13 @@ class ProfileController {
         require_auth();
         
         $user = session_get('user');
+        
+        if (!$user || !isset($user['id_usuario'])) {
+            set_flash('error', 'Sesión inválida. Por favor, inicie sesión nuevamente.');
+            redirect(url('/login'));
+            return;
+        }
+        
         $bookings = $this->bookingModel->getUserBookings($user['id_usuario']);
         
         require VIEWS_PATH . '/profile/dashboard.php';
@@ -31,6 +38,12 @@ class ProfileController {
         require_auth();
         
         $user = session_get('user');
+        
+        if (!$user || !isset($user['id_usuario'])) {
+            set_flash('error', 'Sesión inválida. Por favor, inicie sesión nuevamente.');
+            redirect(url('/login'));
+            return;
+        }
         
         if (is_post()) {
             $data = [
@@ -68,6 +81,13 @@ class ProfileController {
         }
         
         $user = session_get('user');
+        
+        if (!$user || !isset($user['id_usuario'])) {
+            set_flash('error', 'Sesión inválida. Por favor, inicie sesión nuevamente.');
+            redirect(url('/login'));
+            return;
+        }
+        
         $current_password = post_param('current_password');
         $new_password = post_param('new_password');
         $confirm_password = post_param('confirm_password');

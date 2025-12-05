@@ -10,10 +10,10 @@ require VIEWS_PATH . '/layouts/header.php';
         <div class="profile-card">
             <h2>Información Personal</h2>
             <div class="profile-info">
-                <p><strong>Nombre:</strong> <?= escape_html($user['nombre'] . ' ' . $user['apellido']) ?></p>
-                <p><strong>Email:</strong> <?= escape_html($user['email']) ?></p>
-                <p><strong>Teléfono:</strong> <?= escape_html($user['telefono'] ?? 'No especificado') ?></p>
-                <p><strong>Documento:</strong> <?= $user['tipo_documento'] ?> - <?= escape_html($user['numero_documento']) ?></p>
+                <p><strong>Nombre:</strong> <?= isset($user['nombre']) && isset($user['apellido']) ? escape_html($user['nombre'] . ' ' . $user['apellido']) : 'No especificado' ?></p>
+                <p><strong>Email:</strong> <?= isset($user['email']) ? escape_html($user['email']) : 'No especificado' ?></p>
+                <p><strong>Teléfono:</strong> <?= isset($user['telefono']) && !empty($user['telefono']) ? escape_html($user['telefono']) : 'No especificado' ?></p>
+                <p><strong>Documento:</strong> <?= isset($user['tipo_documento']) && isset($user['numero_documento']) ? $user['tipo_documento'] . ' - ' . escape_html($user['numero_documento']) : 'No especificado' ?></p>
             </div>
             <a href="<?= url('/profile/edit') ?>" class="btn btn-primary">
                 <i class="fas fa-edit"></i> Editar Perfil
@@ -31,7 +31,7 @@ require VIEWS_PATH . '/layouts/header.php';
                     <?php foreach ($bookings as $booking): ?>
                     <div class="booking-item">
                         <div class="booking-header">
-                            <strong><?= $booking['codigo_reserva'] ?></strong>
+                            <strong><?= escape_html($booking['codigo_reserva']) ?></strong>
                             <span class="badge badge-<?= $booking['estado_reserva'] === 'confirmada' ? 'success' : 'warning' ?>">
                                 <?= ucfirst($booking['estado_reserva']) ?>
                             </span>

@@ -122,6 +122,7 @@ function set_user_session($user) {
     session_set('user_id', $user['id_usuario']);
     session_set('user_email', $user['email']);
     session_set('user_name', $user['nombre'] . ' ' . $user['apellido']);
+    session_set('user', $user); // Guardar datos completos del usuario
 }
 
 /**
@@ -131,6 +132,7 @@ function clear_user_session() {
     session_delete('user_id');
     session_delete('user_email');
     session_delete('user_name');
+    session_delete('user');
 }
 
 /**

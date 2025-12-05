@@ -12,30 +12,30 @@ require VIEWS_PATH . '/layouts/header.php';
         <div class="form-row">
             <div class="form-group">
                 <label>Nombre *</label>
-                <input type="text" name="nombre" value="<?= escape_html($user['nombre']) ?>" required>
+                <input type="text" name="nombre" value="<?= isset($user['nombre']) ? escape_html($user['nombre']) : '' ?>" required>
             </div>
             
             <div class="form-group">
                 <label>Apellido *</label>
-                <input type="text" name="apellido" value="<?= escape_html($user['apellido']) ?>" required>
+                <input type="text" name="apellido" value="<?= isset($user['apellido']) ? escape_html($user['apellido']) : '' ?>" required>
             </div>
         </div>
         
         <div class="form-row">
             <div class="form-group">
                 <label>Teléfono</label>
-                <input type="tel" name="telefono" value="<?= escape_html($user['telefono'] ?? '') ?>">
+                <input type="tel" name="telefono" value="<?= isset($user['telefono']) ? escape_html($user['telefono']) : '' ?>">
             </div>
             
             <div class="form-group">
                 <label>Fecha de Nacimiento</label>
-                <input type="date" name="fecha_nacimiento" value="<?= $user['fecha_nacimiento'] ?? '' ?>">
+                <input type="date" name="fecha_nacimiento" value="<?= isset($user['fecha_nacimiento']) ? $user['fecha_nacimiento'] : '' ?>">
             </div>
         </div>
         
         <div class="form-group">
             <label>Dirección</label>
-            <input type="text" name="direccion" value="<?= escape_html($user['direccion'] ?? '') ?>">
+            <input type="text" name="direccion" value="<?= isset($user['direccion']) ? escape_html($user['direccion']) : '' ?>">
         </div>
         
         <button type="submit" class="btn btn-primary">

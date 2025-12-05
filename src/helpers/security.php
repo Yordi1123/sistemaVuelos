@@ -85,7 +85,10 @@ function generate_code($length = 6, $prefix = '') {
  * @return string
  */
 function escape_html($data) {
-    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    if ($data === null || $data === '') {
+        return '';
+    }
+    return htmlspecialchars((string)$data, ENT_QUOTES, 'UTF-8');
 }
 
 /**
