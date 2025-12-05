@@ -1,0 +1,31 @@
+# Archivos de configuración sensibles
+config/database.php
+
+# Archivos subidos por usuarios
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencias (si usas Composer en el futuro)
+vendor/
+composer.lock
+
+# Caché
+cache/
+*.cache
