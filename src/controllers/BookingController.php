@@ -9,7 +9,6 @@ class BookingController {
     private $flightModel;
     private $seatModel;
     private $passengerModel;
-    private $db;
     
     public function __construct() {
         $this->bookingModel = new Booking();
