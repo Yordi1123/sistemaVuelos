@@ -28,7 +28,7 @@ $seatMap = session_get('booking_seat_map');
             </div>
         </div>
         
-        <form action="<?= url('/booking/passenger-info') ?>" method="POST" id="seatSelectionForm">
+        <form action="<?= url('/booking/passenger-info') ?>" method="POST" id="seatSelectionForm" data-max-passengers="<?= $num_passengers ?>">
             <input type="hidden" name="selected_seats" id="selectedSeatsInput">
             
             <div class="seat-map-container">
