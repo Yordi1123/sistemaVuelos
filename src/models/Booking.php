@@ -18,8 +18,6 @@ class Booking {
      */
     public function create($data) {
         try {
-            $this->db->beginTransaction();
-            
             // Generar código de reserva único
             $codigo_reserva = $this->generateReservationCode();
             
@@ -59,11 +57,9 @@ class Booking {
                 ':subtotal' => $data['monto_total']
             ]);
             
-            $this->db->commit();
             return $reserva_id;
             
         } catch (PDOException $e) {
-            $this->db->rollBack();
             if (DEBUG_MODE) {
                 error_log("Error al crear reserva: " . $e->getMessage());
             }

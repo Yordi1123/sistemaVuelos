@@ -26,10 +26,18 @@ class PaymentController {
             return;
         }
         
+        if (DEBUG_MODE) {
+            error_log("Buscando reserva con código: " . $booking_code);
+        }
+        
         $booking = $this->bookingModel->getByCode($booking_code);
         
+        if (DEBUG_MODE) {
+            error_log("Resultado de búsqueda: " . print_r($booking, true));
+        }
+        
         if (!$booking) {
-            set_flash('error', 'Reserva no encontrada');
+            set_flash('error', 'Reserva no encontrada. Código: ' . $booking_code);
             redirect(url('/'));
             return;
         }

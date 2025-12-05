@@ -93,8 +93,6 @@ class Seat {
      */
     public function reserve($seat_ids, $passenger_id, $detail_id) {
         try {
-            $this->db->beginTransaction();
-            
             // Actualizar estado de asientos
             $placeholders = str_repeat('?,', count($seat_ids) - 1) . '?';
             $sql_update = "UPDATE asientos 
@@ -116,11 +114,9 @@ class Seat {
                 $stmt_insert->execute([$passenger_id, $seat_id, $detail_id]);
             }
             
-            $this->db->commit();
             return true;
             
         } catch (PDOException $e) {
-            $this->db->rollBack();
             if (DEBUG_MODE) {
                 error_log("Error al reservar asientos: " . $e->getMessage());
             }

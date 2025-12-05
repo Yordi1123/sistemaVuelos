@@ -227,11 +227,10 @@ class BookingController {
             return;
         }
         
+        $transactionActive = false;
+        
         try {
-            $this->db = Database::getInstance()->getConnection();
-            $this->db->beginTransaction();
-            
-            // Obtener datos de sesión
+            // Obtener datos de sesión PRIMERO
             $user = session_get('user');
             $flight = session_get('booking_flight');
             $category = session_get('booking_category');
@@ -240,7 +239,7 @@ class BookingController {
             $passengers_data = session_get('booking_passengers');
             $total = session_get('booking_total');
             
-            // Verificar que todos los datos estén presentes con mensajes específicos
+            // Verificar que todos los datos estén presentes
             $missing = [];
             if (!$user) $missing[] = 'usuario';
             if (!$flight) $missing[] = 'vuelo';
@@ -250,10 +249,15 @@ class BookingController {
             if (!$passengers_data) $missing[] = 'datos de pasajeros';
             
             if (!empty($missing)) {
-                throw new Exception('Datos de reserva incompletos: ' . implode(', ', $missing) . '. Por favor, inicie el proceso de reserva nuevamente.');
+                throw new Exception('Datos de reserva incompletos: ' . implode(', ', $missing));
             }
             
-            // Verificar disponibilidad de asientos nuevamente
+            // AHORA iniciar transacción
+            $this->db = Database::getInstance()->getConnection();
+            $this->db->beginTransaction();
+            $transactionActive = true;
+            
+            // Verificar disponibilidad de asientos
             if (!$this->seatModel->checkAvailability($selected_seats)) {
                 throw new Exception('Uno o más asientos ya no están disponibles');
             }
@@ -271,17 +275,17 @@ class BookingController {
             $reserva_id = $this->bookingModel->create($reserva_data);
             
             if (!$reserva_id) {
-                throw new Exception('Error al crear reserva');
+                throw new Exception('Error al crear reserva en la base de datos');
             }
             
-            // Obtener detalle de reserva ID
+            // Obtener detalle de reserva
             $sql = "SELECT id_detalle FROM detalle_reserva WHERE id_reserva = ? LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$reserva_id]);
             $detalle = $stmt->fetch();
             
             if (!$detalle) {
-                throw new Exception('Error al obtener detalle de reserva');
+                throw new Exception('Error al crear detalle de reserva');
             }
             
             $detalle_id = $detalle['id_detalle'];
@@ -304,7 +308,9 @@ class BookingController {
                 }
             }
             
+            // COMMIT de la transacción
             $this->db->commit();
+            $transactionActive = false;
             
             // Limpiar sesión de reserva
             session_delete('booking_flight');
@@ -319,13 +325,23 @@ class BookingController {
             // Obtener reserva completa
             $booking = $this->bookingModel->getById($reserva_id);
             
-            set_flash('success', 'Reserva creada exitosamente');
+            if (!$booking) {
+                set_flash('error', 'Reserva creada pero error al obtener detalles');
+                redirect(url('/profile/dashboard'));
+                return;
+            }
             
+            set_flash('success', 'Reserva creada exitosamente');
             require VIEWS_PATH . '/booking/confirmation.php';
             
         } catch (Exception $e) {
-            if (isset($this->db)) {
-                $this->db->rollBack();
+            // Solo hacer rollback si la transacción está activa
+            if ($transactionActive && isset($this->db)) {
+                try {
+                    $this->db->rollBack();
+                } catch (Exception $rollbackEx) {
+                    // Ignorar errores de rollback
+                }
             }
             
             set_flash('error', $e->getMessage());
