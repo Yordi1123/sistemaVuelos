@@ -36,8 +36,8 @@
                     <li><a href="<?= url('/flights/search') ?>">Buscar Vuelos</a></li>
                     
                     <?php if (is_authenticated()): ?>
-                        <li><a href="<?= url('/profile') ?>">Mi Perfil</a></li>
-                        <li><a href="<?= url('/bookings') ?>">Mis Reservas</a></li>
+                        <li><a href="<?= url('/profile/dashboard') ?>">Mi Perfil</a></li>
+                        <li><a href="<?= url('/profile/dashboard') ?>">Mis Reservas</a></li>
                         <li>
                             <span class="user-name">
                                 <i class="fas fa-user-circle"></i>
